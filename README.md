@@ -2,6 +2,11 @@
 
 Automatically export userdata from your reddit accounts.
 
+You can export all or any of the following:
+- own comments and submissions
+- saved comments and submissions
+- upvoted comments and submissions
+
 For each one of your accounts, you have to create a reddit script api key and secret key (see https://www.reddit.com/prefs/apps > new app > script).
 
 ## Requirements
