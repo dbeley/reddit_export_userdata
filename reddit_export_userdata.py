@@ -192,7 +192,7 @@ def parse_args():
     parser.add_argument(
         "-a",
         "--archivebox_export",
-        help="Export only urls (old.reddit and www.reddit) in order to be used by archivebox.",
+        help="Export only a list of urls (old.reddit, www.reddit and external links) in order to be used with archivebox.",
         dest="archivebox_export",
         action="store_true",
     )
