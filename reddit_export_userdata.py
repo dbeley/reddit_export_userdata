@@ -15,7 +15,7 @@ logger = logging.getLogger()
 start_time = time.time()
 
 
-# TODO add config file validation
+# TODO Add config file validation.
 def validate_config(config, args):
     return True
 
@@ -77,37 +77,46 @@ def extract_data(reddit, user_config):
     username = reddit.user.me().name
     user_data = []
     if "upvoted" in user_config:
+        logger.info("Exporting upvoted content.")
         logger.debug(f"Extracting upvoted content for user {username}")
         data = reddit.user.me().upvoted(limit=None)
         user_data += create_dict(data)
+        for item in user_data:
+            item.update({"Action": "Upvoted"})
     if "saved" in user_config:
+        logger.info("Exporting saved content.")
         logger.debug(f"Extracting saved content for user {username}")
         data = reddit.user.me().saved(limit=None)
         user_data += create_dict(data)
+        for item in user_data:
+            item.update({"Action": "Saved"})
     if "submissions" in user_config:
+        logger.info("Exporting submitted content.")
         logger.debug(f"Extracting submitted content for user {username}")
         data = reddit.user.me().submissions.new(limit=None)
         user_data += create_dict(data)
-    print(user_data)
+        for item in user_data:
+            item.update({"Action": "Submitted"})
 
-    # add data owner in list of dict
+    # Add data owner in list of dict.
     for item in user_data:
         item.update({"reddit_export_userdata Username": username})
     return user_data
 
 
-# def export_data(archivebox_export: Boolean, separate_export: Boolean, complete_data):
-def export_data(export_name, extension, data):
-    export_name = export_name + "." + extension
-    # CSV format : all data fields with header
+def export_data(filename, extension, data):
+    filename = filename + "." + extension
+    # CSV format : all data fields with header.
     if extension == "csv":
-        with open(export_name, "w") as f:
-            writer = csv.DictWriter(f, fieldnames=data[0].keys())
+        with open(filename, "w") as f:
+            writer = csv.DictWriter(
+                f, fieldnames=data[0].keys(), delimiter=";", quoting=csv.QUOTE_MINIMAL
+            )
             writer.writeheader()
             writer.writerows(data)
-    # TXT format : only urls, in a archivebox-compatible format (list of urls)
+    # TXT format : only urls, in a archivebox-compatible format (list of urls).
     elif extension == "txt":
-        with open(export_name, "w") as f:
+        with open(filename, "w") as f:
             for i in data:
                 f.write(i["reddit URL"] + "\n")
                 f.write(i["old.reddit URL"] + "\n")
@@ -122,23 +131,24 @@ def main():
     if not validate_config(config, args):
         raise Exception("Config is not valid.")
 
-    # Get options from CLI arguments and/or config file
+    # Get options from CLI arguments and/or config file.
     separate_export = args.separate_export or config["options"]["separate_export"]
     archivebox_export = args.archivebox_export or config["options"]["archivebox_export"]
 
     complete_data = []
     for user in config["users"]:
+        logger.info(f"Exporting data for {user['username']}:")
         reddit = reddit_connect(user)
         user_config = user["exports"]
         complete_data += extract_data(reddit, user_config)
 
-    # Export in a folder called "Exports"
+    # Export in a folder called "Exports".
     export_folder_name = "Exports"
     timestamp = int(time.time())
     Path(export_folder_name).mkdir(parents=True, exist_ok=True)
-    # separate export, one file per user
+    # Separate export, one file per user.
     if separate_export:
-        # split complete_data by users
+        # Split complete_data by users.
         data = collections.defaultdict(list)
         for submission in complete_data:
             data[submission["reddit_export_userdata Username"]].append(submission)
@@ -146,20 +156,20 @@ def main():
         split_complete_data = list(data.values())
         for complete_data in split_complete_data:
             username = complete_data[0]["reddit_export_userdata Username"]
-            export_name = (
+            filename = (
                 f"{export_folder_name}/{username}_reddit_export_userdata_{timestamp}"
             )
             if archivebox_export:
-                export_data(export_name, "txt", complete_data)
+                export_data(filename, "txt", complete_data)
             else:
-                export_data(export_name, "csv", complete_data)
-    # global export
+                export_data(filename, "csv", complete_data)
+    # Global export.
     else:
-        export_name = "{export_folder_name}/reddit_export_userdata_{timestamp}"
+        filename = f"{export_folder_name}/reddit_export_userdata_{timestamp}"
         if archivebox_export:
-            export_data(export_name, "txt", complete_data)
+            export_data(filename, "txt", complete_data)
         else:
-            export_data(export_name, "csv", complete_data)
+            export_data(filename, "csv", complete_data)
 
     logger.info("Runtime : %.2f seconds." % (time.time() - start_time))
 
