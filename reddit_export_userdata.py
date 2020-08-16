@@ -166,7 +166,9 @@ def main():
 
 def parse_args():
     format = "%(levelname)s :: %(message)s"
-    parser = argparse.ArgumentParser(description="Python skeleton")
+    parser = argparse.ArgumentParser(
+        description="reddit_export_userdata. Exports userdata of one or several reddit accounts."
+    )
     parser.add_argument(
         "--debug",
         help="Display debugging information.",
@@ -174,9 +176,6 @@ def parse_args():
         dest="loglevel",
         const=logging.DEBUG,
         default=logging.INFO,
-    )
-    parser.add_argument(
-        "positional_argument", nargs="?", type=str, help="Positional argument."
     )
     parser.add_argument(
         "-a",

@@ -1,4 +1,4 @@
-# rename this file config.yml
+# Rename this file config.yml.
 users:
     # The four following fields are mandatory.
     - username: username1
