@@ -1,13 +1,13 @@
 # reddit_export_userdata
 
-Automatically export userdata from your reddit accounts.
+Export userdata from your reddit accounts.
 
 You can export all or any of the following:
-- own comments and submissions
-- saved comments and submissions
-- upvoted comments and submissions
+- Own comments and submissions
+- Saved comments and submissions
+- Upvoted comments and submissions
 
-For each one of your accounts, you have to create a reddit script api key and secret key (see https://www.reddit.com/prefs/apps > new app > script).
+For each one of your accounts, you have to create a reddit script API key and secret API key (see https://www.reddit.com/prefs/apps > new app > script).
 
 ## Requirements
 
@@ -22,7 +22,10 @@ pip install -r requirements.txt
 
 ## Configuration
 
-All the configuration happens in a yaml config file. Open the config.example.yaml to see an example on how to fill it.
+For configuration, open the config.example.yaml to see an example on how to fill it.
+
+By default, the script search for a `config.yaml` config file, but you can use the `-c/--config_file` argument to use another config file.
+
 
 ## Run
 
