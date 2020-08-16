@@ -50,9 +50,9 @@ def create_dict(data):
             content.append(
                 {
                     "Title": x.title,
-                    "reddit URL": f"https://www.reddit.com{x.permalink}",
-                    "old.reddit URL": f"https://old.reddit.com{x.permalink}",
-                    "link URL": x.url,
+                    "URL reddit": f"https://www.reddit.com{x.permalink}",
+                    "URL old.reddit": f"https://old.reddit.com{x.permalink}",
+                    "Link URL": x.url,
                     "Text": x.selftext,
                     "Author": str(x.author),
                     "Type": "Submission",
@@ -62,9 +62,9 @@ def create_dict(data):
             content.append(
                 {
                     "Title": x.link_title,
-                    "reddit URL": f"https://www.reddit.com{x.permalink}",
-                    "old.reddit URL": f"https://old.reddit.com{x.permalink}",
-                    "link URL": x.link_url,
+                    "URL reddit": f"https://www.reddit.com{x.permalink}",
+                    "URL old.reddit": f"https://old.reddit.com{x.permalink}",
+                    "Link URL": x.link_url,
                     "Text": x.body,
                     "Author": str(x.author),
                     "Type": "Comment",
@@ -156,19 +156,21 @@ def main():
         split_complete_data = list(data.values())
         for complete_data in split_complete_data:
             username = complete_data[0]["reddit_export_userdata Username"]
-            filename = (
-                f"{export_folder_name}/{username}_reddit_export_userdata_{timestamp}"
-            )
             if archivebox_export:
+                filename = f"{export_folder_name}/reddit_export_userdata_{username}_archivebox_{timestamp}"
                 export_data(filename, "txt", complete_data)
             else:
+                filename = f"{export_folder_name}/reddit_export_userdata_{username}_{timestamp}"
                 export_data(filename, "csv", complete_data)
     # Global export.
     else:
-        filename = f"{export_folder_name}/reddit_export_userdata_{timestamp}"
         if archivebox_export:
+            filename = (
+                f"{export_folder_name}/reddit_export_userdata_archivebox_{timestamp}"
+            )
             export_data(filename, "txt", complete_data)
         else:
+            filename = f"{export_folder_name}/reddit_export_userdata_{timestamp}"
             export_data(filename, "csv", complete_data)
 
     logger.info("Runtime : %.2f seconds." % (time.time() - start_time))
