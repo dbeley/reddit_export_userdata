@@ -24,6 +24,37 @@ pip install -r requirements.txt
 
 For configuration, open the config.example.yaml to see an example on how to fill it.
 
+```
+# Rename this file config.yaml.
+users:
+    # The four following fields are mandatory.
+    - username: username1
+      password : password1
+      client_id : client_id1
+      client_secret : client_secret1
+      # At least one export option has to be set.
+      exports:
+          # Comments made by user.
+          - comments
+          # Submissions made by user.
+          - submissions
+          # Submission and comments saved by user.
+          - saved
+          # Submission and comments upvoted by user.
+          - upvoted
+    - username: username2
+      password : password2
+      client_id : client_id2
+      client_secret : client_secret2
+      exports:
+          - saved
+options:
+    # Each user will have a separate export file.
+    separate_export: true
+    # Will only export list of urls instead of csv files.
+    archivebox_export: true
+```
+
 By default, the script search for a `config.yaml` config file, but you can use the `-c/--config_file` argument to use another config file.
 
 
