@@ -51,14 +51,14 @@ def create_dict(data, action):
             content.append(
                 {
                     "title": x.title,
+                    "text": x.selftext,
+                    "author": str(x.author),
+                    "score": x.score,
+                    "date": int(x.created_utc),
                     "url": f"https://www.reddit.com{x.permalink}",
                     "url_old": f"https://old.reddit.com{x.permalink}",
                     "url_link": x.url,
-                    "text": x.selftext,
-                    "author": str(x.author),
                     "type": "Submission",
-                    "score": x.score,
-                    "date": x.created_utc,
                     "action": action,
                 }
             )
@@ -66,14 +66,14 @@ def create_dict(data, action):
             content.append(
                 {
                     "title": x.link_title,
+                    "text": x.body,
+                    "author": str(x.author),
+                    "score": x.score,
+                    "date": int(x.created_utc),
                     "url": f"https://www.reddit.com{x.permalink}",
                     "url_old": f"https://old.reddit.com{x.permalink}",
                     "url_link": x.link_url,
-                    "text": x.body,
-                    "author": str(x.author),
                     "type": "Comment",
-                    "score": x.score,
-                    "date": x.created_utc,
                     "action": action,
                 }
             )
@@ -97,6 +97,7 @@ def extract_data(reddit, user_config):
         user_data += create_dict(data, "Submitted")
         logger.info("Exporting submitted content (comments).")
         data = reddit.user.me().comments.new(limit=None)
+        user_data += create_dict(data, "Submitted")
 
     # Add data owner in list of dict.
     for item in user_data:
