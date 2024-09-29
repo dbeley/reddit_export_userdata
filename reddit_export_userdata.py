@@ -137,7 +137,7 @@ def main():
 
     complete_data = []
     for user in config["users"]:
-        logger.info(f"Exporting data for {user['username']}:")
+        logger.info(f"Exporting data for {user['username']}.")
         reddit = reddit_connect(user)
         user_config = user["exports"]
         complete_data += extract_data(reddit, user_config)
