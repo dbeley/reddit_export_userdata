@@ -57,6 +57,8 @@ def create_dict(data, action):
                     "text": x.selftext,
                     "author": str(x.author),
                     "type": "Submission",
+                    "score": x.score,
+                    "date": x.created_utc,
                     "action": action,
                 }
             )
@@ -70,6 +72,8 @@ def create_dict(data, action):
                     "text": x.body,
                     "author": str(x.author),
                     "type": "Comment",
+                    "score": x.score,
+                    "date": x.created_utc,
                     "action": action,
                 }
             )
@@ -88,9 +92,11 @@ def extract_data(reddit, user_config):
         data = reddit.user.me().saved(limit=None)
         user_data += create_dict(data, "Saved")
     if "submissions" in user_config:
-        logger.info("Exporting submitted content.")
+        logger.info("Exporting submitted content (posts).")
         data = reddit.user.me().submissions.new(limit=None)
         user_data += create_dict(data, "Submitted")
+        logger.info("Exporting submitted content (comments).")
+        data = reddit.user.me().comments.new(limit=None)
 
     # Add data owner in list of dict.
     for item in user_data:
