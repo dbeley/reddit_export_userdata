@@ -17,12 +17,15 @@ For each one of your accounts, you have to create a reddit script API key and se
 ## Installation
 
 ```
-pip install -r requirements.txt
+git clone https://github.com/dbeley/reddit_export_userdata
+cd reddit_export_userdata
+pip install praw pyyaml
+python reddit_export_userdata.py -h
 ```
 
 ## Configuration
 
-For configuration, open the config.example.yaml to see an example on how to fill it.
+For configuration, open the `config.example.yaml` file to see an example.
 
 ```
 # Rename this file config.yaml.
