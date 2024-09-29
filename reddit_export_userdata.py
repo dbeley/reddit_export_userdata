@@ -1,6 +1,7 @@
 """
 reddit_export_userdata: Export userdata of one or several reddit accounts.
 """
+
 import logging
 import time
 import argparse

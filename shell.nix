@@ -8,6 +8,7 @@ in pkgs.mkShell {
 
     pythonPackages.praw
     pythonPackages.pyyaml
+    pythonPackages.black
   ];
 
 }
