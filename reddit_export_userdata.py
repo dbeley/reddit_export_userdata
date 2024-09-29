@@ -43,31 +43,33 @@ def reddit_connect(user):
         logger.error(f"Couldn't extract data for user {user['username']}: {e}.")
 
 
-def create_dict(data):
+def create_dict(data, action):
     content = []
     for x in data:
         if not isinstance(x, praw.models.Comment):
             content.append(
                 {
-                    "Title": x.title,
-                    "URL reddit": f"https://www.reddit.com{x.permalink}",
-                    "URL old.reddit": f"https://old.reddit.com{x.permalink}",
-                    "Link URL": x.url,
-                    "Text": x.selftext,
-                    "Author": str(x.author),
-                    "Type": "Submission",
+                    "title": x.title,
+                    "url": f"https://www.reddit.com{x.permalink}",
+                    "url_old": f"https://old.reddit.com{x.permalink}",
+                    "url_link": x.url,
+                    "text": x.selftext,
+                    "author": str(x.author),
+                    "type": "Submission",
+                    "action": action,
                 }
             )
         else:
             content.append(
                 {
-                    "Title": x.link_title,
-                    "URL reddit": f"https://www.reddit.com{x.permalink}",
-                    "URL old.reddit": f"https://old.reddit.com{x.permalink}",
-                    "Link URL": x.link_url,
-                    "Text": x.body,
-                    "Author": str(x.author),
-                    "Type": "Comment",
+                    "title": x.link_title,
+                    "url": f"https://www.reddit.com{x.permalink}",
+                    "url_old": f"https://old.reddit.com{x.permalink}",
+                    "url_link": x.link_url,
+                    "text": x.body,
+                    "author": str(x.author),
+                    "type": "Comment",
+                    "action": action,
                 }
             )
     return content
@@ -78,29 +80,20 @@ def extract_data(reddit, user_config):
     user_data = []
     if "upvoted" in user_config:
         logger.info("Exporting upvoted content.")
-        logger.debug(f"Extracting upvoted content for user {username}")
         data = reddit.user.me().upvoted(limit=None)
-        user_data += create_dict(data)
-        for item in user_data:
-            item.update({"Action": "Upvoted"})
+        user_data += create_dict(data, "Upvoted")
     if "saved" in user_config:
         logger.info("Exporting saved content.")
-        logger.debug(f"Extracting saved content for user {username}")
         data = reddit.user.me().saved(limit=None)
-        user_data += create_dict(data)
-        for item in user_data:
-            item.update({"Action": "Saved"})
+        user_data += create_dict(data, "Saved")
     if "submissions" in user_config:
         logger.info("Exporting submitted content.")
-        logger.debug(f"Extracting submitted content for user {username}")
         data = reddit.user.me().submissions.new(limit=None)
-        user_data += create_dict(data)
-        for item in user_data:
-            item.update({"Action": "Submitted"})
+        user_data += create_dict(data, "Submitted")
 
     # Add data owner in list of dict.
     for item in user_data:
-        item.update({"reddit_export_userdata Username": username})
+        item.update({"data_username": username})
     return user_data
 
 
@@ -118,10 +111,10 @@ def export_data(filename, extension, data):
     elif extension == "txt":
         with open(filename, "w") as f:
             for i in data:
-                f.write(i["reddit URL"] + "\n")
-                f.write(i["old.reddit URL"] + "\n")
-                if i["link URL"]:
-                    f.write(i["link URL"] + "\n")
+                f.write(i["url"] + "\n")
+                f.write(i["url_old"] + "\n")
+                if i["url_link"]:
+                    f.write(i["url_link"] + "\n")
 
 
 def main():
@@ -151,11 +144,11 @@ def main():
         # Split complete_data by users.
         data = collections.defaultdict(list)
         for submission in complete_data:
-            data[submission["reddit_export_userdata Username"]].append(submission)
+            data[submission["data_username"]].append(submission)
 
         split_complete_data = list(data.values())
         for complete_data in split_complete_data:
-            username = complete_data[0]["reddit_export_userdata Username"]
+            username = complete_data[0]["data_username"]
             if archivebox_export:
                 filename = f"{export_folder_name}/reddit_export_userdata_{username}_archivebox_{timestamp}"
                 export_data(filename, "txt", complete_data)
