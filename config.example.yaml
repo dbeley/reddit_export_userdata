@@ -11,9 +11,9 @@ users:
           - comments
           # Submissions made by user.
           - submissions
-          # Submission and comments saved by user.
+          # Submissions and comments saved by user.
           - saved
-          # Submission and comments upvoted by user.
+          # Submissions and comments upvoted by user.
           - upvoted
     - username: username2
       password : password2

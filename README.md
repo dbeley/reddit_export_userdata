@@ -41,9 +41,9 @@ users:
           - comments
           # Submissions made by user.
           - submissions
-          # Submission and comments saved by user.
+          # Submissions and comments saved by user.
           - saved
-          # Submission and comments upvoted by user.
+          # Submissions and comments upvoted by user.
           - upvoted
     - username: username2
       password : password2
@@ -58,7 +58,7 @@ options:
     archivebox_export: true
 ```
 
-By default, the script search for a `config.yaml` config file, but you can use the `-c/--config_file` argument to use another config file.
+By default, the script searches for a `config.yaml` config file in the current folder, but you can use the `-c/--config_file` argument to use another config file.
 
 
 ## Run
