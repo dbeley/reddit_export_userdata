@@ -55,6 +55,7 @@ def create_dict(data, action):
                     "author": str(x.author),
                     "score": x.score,
                     "date": int(x.created_utc),
+                    "subreddit": str(x.subreddit),
                     "url": f"https://www.reddit.com{x.permalink}",
                     "url_old": f"https://old.reddit.com{x.permalink}",
                     "url_link": x.url,
@@ -70,6 +71,7 @@ def create_dict(data, action):
                     "author": str(x.author),
                     "score": x.score,
                     "date": int(x.created_utc),
+                    "subreddit": str(x.subreddit),
                     "url": f"https://www.reddit.com{x.permalink}",
                     "url_old": f"https://old.reddit.com{x.permalink}",
                     "url_link": x.link_url,
@@ -141,7 +143,11 @@ def main():
         logger.info(f"Exporting data for {user['username']}.")
         reddit = reddit_connect(user)
         user_config = user["exports"]
-        complete_data += extract_data(reddit, user_config)
+        try:
+            complete_data += extract_data(reddit, user_config)
+        except Exception as e:
+            logger.error(f"Error extracting data for user {user['username']}: {str(e)}")
+            continue
 
     # Export in a folder called "Exports".
     export_folder_name = "Exports"
